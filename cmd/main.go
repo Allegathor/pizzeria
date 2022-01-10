@@ -14,7 +14,8 @@ func main() {
 	}
 
 	s := repo.NewStorageSQL(db)
-	srv := api.NewAPIService(s)
+	o := repo.NewOrderSQL(db)
+	srv := api.NewAPIService(s, o)
 
 	srv.Run()
 }

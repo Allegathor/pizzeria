@@ -14,12 +14,80 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "{$baseURL}/order",
+							"raw": "{{baseURL}}/storage",
 							"host": [
-								"{$baseURL}"
+								"{{baseURL}}"
 							],
 							"path": [
-								"order"
+								"storage"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "add",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"id\": 1,\r\n    \"qty\": 5\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseURL}}/storage/add",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"storage",
+								"add"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "order",
+			"item": [
+				{
+					"name": "root",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": null
+					},
+					"response": []
+				},
+				{
+					"name": "create",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n\t\"name\": \"Tom\",\r\n\t\"phone\": \"893483\",\r\n\t\"street\": \"some street\",\r\n\t\"house\": \"78\",\r\n\t\"housing\": \"4\",\r\n\t\"apartment\": \"101\",\r\n\t\"pizza_id\": 1\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseURL}}/order/create",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"order",
+								"create"
 							]
 						}
 					},
@@ -51,7 +119,7 @@
 	"variable": [
 		{
 			"key": "baseURL",
-			"value": "localhost:8000",
+			"value": "http://localhost:8000",
 			"type": "default"
 		}
 	]

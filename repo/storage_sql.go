@@ -5,6 +5,11 @@ import (
 	"database/sql"
 )
 
+type Storage interface {
+	Add(ctx context.Context, qty, id int) error
+	List(ctx context.Context) ([]Ingredient, error)
+}
+
 type Ingredient struct {
 	ID   int    `json:"id"`
 	Qty  int    `json:"qty"`
