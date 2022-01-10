@@ -1,20 +1,24 @@
 package api
 
 import (
-	"pizzeria/repo"
-
 	"net/http"
+	"pizzeria/repo"
+	"time"
 
+	ginzap "github.com/gin-contrib/zap"
 	"github.com/gin-gonic/gin"
+	"go.uber.org/zap"
 )
 
 type APIService struct {
+	logger  *zap.Logger
 	order   repo.Order
 	storage repo.Storage
 }
 
-func NewAPIService(storage repo.Storage, order repo.Order) *APIService {
+func NewAPIService(logger *zap.Logger, storage repo.Storage, order repo.Order) *APIService {
 	return &APIService{
+		logger:  logger,
 		order:   order,
 		storage: storage,
 	}
@@ -22,6 +26,11 @@ func NewAPIService(storage repo.Storage, order repo.Order) *APIService {
 
 func (s *APIService) router() *gin.Engine {
 	g := gin.New()
+	gin.SetMode(gin.ReleaseMode)
+
+	g.Use(ginzap.Ginzap(s.logger, time.RFC3339, true))
+	g.Use(ginzap.RecoveryWithZap(s.logger, true))
+
 	g.GET("/storage", s.Storage)
 	g.POST("/storage/add", s.Resupply)
 
@@ -64,6 +73,7 @@ func (s *APIService) Resupply(c *gin.Context) {
 		c.JSON(http.StatusInternalServerError, ErrorJSON{Error: err.Error()})
 		return
 	}
+	s.logger.Info("Ingredient ressuplied", zap.Int("quantity", req.Qty), zap.Int("ID", req.ID))
 
 	c.Status(http.StatusOK)
 }
@@ -74,6 +84,7 @@ func (s *APIService) Orders(c *gin.Context) {
 		c.JSON(http.StatusInternalServerError, ErrorJSON{Error: err.Error()})
 		return
 	}
+	s.logger.Info("Orders", zap.Any("list", list))
 
 	c.JSON(http.StatusOK, list)
 }
@@ -90,6 +101,7 @@ func (s *APIService) CreateOrder(c *gin.Context) {
 		c.JSON(http.StatusInternalServerError, ErrorJSON{Error: err.Error()})
 		return
 	}
+	s.logger.Info("Order created", zap.Any("OrderInfo", req))
 
 	c.Status(http.StatusOK)
 }
